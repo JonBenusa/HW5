@@ -114,6 +114,8 @@ public class TwoWayDirectedGraph {
     }
 	
     /**
+     *
+     *
      * This method evaluates the nodes and their edges to see if there is an uphill and downhill path from home to work
      * @param homeNode - the home node (starting point)
      * @param workNode - the work node (ending point)
@@ -122,7 +124,52 @@ public class TwoWayDirectedGraph {
     public boolean isValidUphillDownhillPath(int homeNode, int workNode) {
 
         //ADD YOUR CODE HERE
-
+        TwoWayDirectedGraphNode home = nodes.get(homeNode);
+        for(TwoWayDirectedGraphNode current : home.getOutgoingNodesUphill()) {      //for each of the nodes downhill from home node
+            if(isPathToWork(current, workNode)) {
+                return true;
+            }else if(upHillPathsFromHome(current, workNode)){
+                return true;
+            }
+        }
+        return false;
+    }
+    /*This function takes all uphill paths from home as far as they go. At each new node it checks to see if there is a downhill path to work.
+     *It will return true if one of the uphill nodes from home have a path to work that is downhill.
+     */
+    private boolean upHillPathsFromHome(TwoWayDirectedGraphNode node, int workNode) {
+        if(node.getOutgoingNodesUphill().isEmpty()) {
+            return false;
+        }else {
+            for(TwoWayDirectedGraphNode current : node.getOutgoingNodesUphill()) {      //for each of the nodes uphill from home node
+                if(isPathToWork(current, workNode)) {       //if the node has a downhill path to work return true
+                    return true;
+                }else if(upHillPathsFromHome(current, workNode)){   // if there is another node uphill from this explore that one
+                    return true;
+                }
+            }
+        }
+        return false;       //none of the route from this node lead to an up hill down hill route to work.
+    }
+    /*This function takes a node that has an uphill path from home and checks to see if that node has a downhill path to work.
+     *
+     */
+    private boolean isPathToWork(TwoWayDirectedGraphNode node, int workNode) {
+        if(node.getOutgoingNodesDownhill().isEmpty()) {
+            return false;
+        }else {
+            for(TwoWayDirectedGraphNode current : node.getOutgoingNodesDownhill()) {    //for all nodes downhill from this node
+                if(current.equals(nodes.get(workNode))) {           //if the node is the work node return true
+                    return true;
+                }else {
+                    if(isPathToWork(current, workNode)) {           //if there is another downhill node from this node then return true
+                        return true;
+                    }
+                }
+            }
+        }
+        //if there are no more downhill nodes to explore then return false because the node that was originally inputted as uphill from home did not lead
+        //to a downhill path to work.
         return false;
     }
 
