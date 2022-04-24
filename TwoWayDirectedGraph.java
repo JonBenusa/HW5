@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * 
  * Represents a graph of nodes and edges in adjacency list format.
  * 
- * @author YOUR NAME HERE Due Date: xx/xx/xx
+ * @author Jonathan Bensua and Tim Due Date: xx/xx/xx
  */
 
 public class TwoWayDirectedGraph {

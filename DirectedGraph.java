@@ -8,13 +8,14 @@ import java.util.List;
  * 
  * Represents a graph of nodes and edges in adjacency list format.
  * 
- * @author YOUR NAME HERE Due Date: xx/xx/xx
+ * @author Jonathan Benusa and Tim Due Date: xx/xx/xx
  */
 
 public class DirectedGraph {
 
 	private static final boolean DEBUG = false;
 	private ArrayList<DirectedGraphNode> nodes;
+	int minCover;
 
 
 	/**
@@ -28,7 +29,7 @@ public class DirectedGraph {
 	public DirectedGraph(boolean[][] adjacencyMatrix) {
 
 		nodes = new ArrayList<DirectedGraphNode>();
-
+		minCover = 0;
 		// populate the graph with nodes.
 		for (int i = 0; i < adjacencyMatrix.length; i++) {
 			nodes.add(new DirectedGraphNode(i));
@@ -113,15 +114,29 @@ public class DirectedGraph {
 	 * edge in the graph.
 	 * 
 	 * Runs in linear time.
-	 * 
+	 * C(V) = min{C(V-1)+sum of children not included, C(V-1)+1}
 	 * @return the minimum number of nodes to completely cover the graph.
 	 * 
 	 */
 	private int vCover(DirectedGraphNode root) {
 
 		//YOUR CODE HERE
-		return -1;
+		if(root.outgoingNodes.isEmpty()) {
+			root.setCoverSize(1);
+			return 1;
+		}else {
+			for(DirectedGraphNode child:root.outgoingNodes) {
+				if(root.outgoingNodes.size()>1) {
+					child.setCoverSize(vCover(child));
+					root.setCoverSize(child.coverSize+1);
+				}else {
+					child.setCoverSize(vCover(child));
+					root.setCoverSize(child.coverSize);
+				}
+			}
+		}
 
+		return root.coverSize;
 	}// vCover
 
 	/**
